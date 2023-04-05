@@ -9,11 +9,20 @@ from deepchem.models.torch_models import MPNNModel
 from copy import deepcopy
 
 
-def get_featurizer(model_name: str):
+# model name: featurizer
+featurizer_map = {
+    "PagtnModel": dc.feat.PagtnMolGraphFeaturizer(),
+    "GATModel": dc.feat.MolGraphConvFeaturizer(),
+    "GCNModel": dc.feat.MolGraphConvFeaturizer(),
+    "AttentiveFPModel": dc.feat.MolGraphConvFeaturizer(use_edges=True),
+    "MPNNModel": dc.feat.MolGraphConvFeaturizer(use_edges=True)
+}
+
+def get_featurizer(name: str):
     """Featurizer
 
     Args:
-        model_name (str): model name
+        name (str): model name
 
     Raises:
         ValueError: model name not found
@@ -21,63 +30,34 @@ def get_featurizer(model_name: str):
     Returns:
         featurizer: dc.feat class
     """
-    if model_name == "PagtnModel":
-        featurizer = dc.feat.PagtnMolGraphFeaturizer()
-    elif model_name in ["GATModel", "GCNModel"]:
-        featurizer = dc.feat.MolGraphConvFeaturizer()
-    elif model_name in ["AttentiveFPModel", "MPNNModel"]:
-        featurizer = dc.feat.MolGraphConvFeaturizer(use_edges=True)
-    else:
-        raise ValueError(f"Model name ({model_name}) not found.")
+    if name not in featurizer_map:
+        raise ValueError(f"Model name ({name}) not found.")
 
-    return featurizer
+    return featurizer_map[name]
 
 
 class GraphModel():
     """GraphModels class
     """
     def __init__(
-        self, name, batch_size, learning_rate, model_dir, **kwargs
+        self, name: str, model_dir: str, **kwargs
     ):
         """Initialization function
 
         Args:
             name (str): model name
+            model_dir (str): model directory
 
         Raises:
-            ValueError: Mode is neither 'regression' nor 'classification'
             ValueError: Model name is not supported.
         """
-        self.model = None
+        if name not in featurizer_map:
+            raise ValueError(f"Model name ({name}) not found.")
 
-        if name == "AttentiveFPModel":
-            self.model = AttentiveFPModel(
-                n_tasks=1, batch_size=batch_size,
-                learning_rate=learning_rate, model_dir=model_dir,
-                **kwargs
-            )
-        elif name == "GCNModel":
-            self.model = GCNModel(
-                n_tasks=1, batch_size=batch_size,
-                learning_rate=learning_rate, model_dir=model_dir,
-            )
-        elif name == "GATModel":
-            self.model = GATModel(
-                n_tasks=1, batch_size=batch_size,
-                learning_rate=learning_rate, model_dir=model_dir,
-            )
-        elif name == "PagtnModel":
-            self.model = PagtnModel(
-                n_tasks=1, batch_size=batch_size,
-                learning_rate=learning_rate, model_dir=model_dir,
-            )
-        elif name == "MPNNModel":
-            self.model = MPNNModel(
-                n_tasks=1, batch_size=batch_size,
-                learning_rate=learning_rate, model_dir=model_dir,
-            )
-        else:
-            raise ValueError(f"Model {name} is not supported!")
+        model_class = globals()[name]
+        self.model = model_class(
+            n_tasks=1, model_dir=model_dir, mode="regression", **kwargs
+        )
 
     def fit(
         self, X_train, y_train, epoch, validation=False,
