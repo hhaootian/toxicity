@@ -18,6 +18,7 @@ featurizer_map = {
     "MPNNModel": dc.feat.MolGraphConvFeaturizer(use_edges=True)
 }
 
+
 def get_featurizer(name: str):
     """Featurizer
 

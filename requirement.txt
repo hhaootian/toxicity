@@ -1,0 +1,11 @@
+rdkit
+deepchem
+scikit-learn
+xlrd
+openpyxl
+PubChemPy
+tensorflow
+tensorflow_probability
+torch
+torch_geometric
+dgllife

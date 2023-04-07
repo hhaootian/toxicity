@@ -10,13 +10,11 @@
     },
     "GCNModel": {
         "learning_rate": [0.001], "batch_size": [32, 64],
-        "predictor_hidden_feats": [64, 128, 256], "dropout": [0, 0.1, 0.2],
-        "number_atom_features": [15, 30, 60]
+        "predictor_hidden_feats": [64, 128, 256], "dropout": [0, 0.1, 0.2]
     },
     "GATModel": {
         "learning_rate": [0.001], "batch_size": [32, 64],
-        "predictor_hidden_feats": [64, 128, 256], "dropout": [0, 0.1, 0.2],
-        "number_atom_features": [15, 30, 60]
+        "predictor_hidden_feats": [64, 128, 256], "dropout": [0, 0.1, 0.2]
     },
     "PagtnModel": {
         "learning_rate": [0.001], "batch_size": [32, 64],
