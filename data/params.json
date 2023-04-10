@@ -1,7 +1,7 @@
 {
     "AttentiveFPModel": {
         "learning_rate": [0.001], "batch_size": [32, 64],
-        "num_layers": [1, 2, 4, 8], "dropout": [0, 0.1, 0.2]
+        "num_layers": [1, 2, 4], "dropout": [0, 0.1, 0.2]
     },
     "MPNNModel": {
         "learning_rate": [0.001], "batch_size": [32, 64],
@@ -19,6 +19,6 @@
     "PagtnModel": {
         "learning_rate": [0.001], "batch_size": [32, 64],
         "hidden_features": [64, 128, 256], "dropout": [0, 0.1, 0.2],
-        "num_layers": [1, 2, 4, 8]
+        "num_layers": [1, 2, 4]
     }
 }
