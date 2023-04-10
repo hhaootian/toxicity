@@ -20,7 +20,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--sheet-dir", help="sheet dir", default="../data/toxicity.xlsx"
 )
-parser.add_argument("--sheet-name", help="sheet name", required=True)
+parser.add_argument("--task-name", help="task name", required=True)
 parser.add_argument("--model-name", help="graph model name", required=True)
 parser.add_argument(
     "--model-dir", help="dir to save model", default="../models"
@@ -29,20 +29,25 @@ parser.add_argument(
     "--param-dir", help="dir to hyperparams.json file",
     default="../data/params.json"
 )
+parser.add_argument(
+    "--output-dir", help="dir to write results",
+    default="../results"
+)
 args = parser.parse_args()
 
 sheet_dir = args.sheet_dir
-sheet_name = args.sheet_name
+task_name = args.task_name
 model_name = args.model_name
-model_dir = args.model_dir.rstrip("/") + f"/{sheet_name}_{model_name}"
+model_dir = args.model_dir.rstrip("/") + f"/{task_name}_{model_name}"
 param_dir = args.param_dir
+output_dir = args.output_dir.rstrip("/")
 
 # read params
 with open(param_dir) as param_file:
     params = json.load(param_file)[model_name]
 
 # read data sheet
-df = pd.read_excel(sheet_dir, sheet_name)
+df = pd.read_excel(sheet_dir, task_name)
 
 # extract feature
 featurizer = get_featurizer(model_name)
@@ -117,5 +122,5 @@ for perm in permutations:
     )
     print(msg)
     # write to file
-    with open(f"../results/{sheet_name}_{model_name}.txt", "a") as file:
+    with open(f"{output_dir}/{task_name}_{model_name}.txt", "a") as file:
         file.write(msg)

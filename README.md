@@ -19,13 +19,13 @@ pip install dglgo -f https://data.dgl.ai/wheels-test/repo.html
 ```bash
 cd src
 python setup.py
-# replace sheet_name and model_name
-python train.py --task-name <sheet_name> --model-name <model_name>
+# replace task_name and model_name
+python train.py --task-name <task_name> --model-name <model_name>
 # for example
 python train.py --task-name VF --model-name PagtnModel
 ```
 
-Available tasks and model names (case sensitive):
+Available task and model names (case sensitive):
 - task name: VF, DM, TP, Fish
 - model name: PagtnModel, GATModel, GCNModel, AttentiveFPModel, MPNNModel
 
