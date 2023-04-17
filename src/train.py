@@ -18,7 +18,7 @@ from utils import get_featurizer, GraphModel
 # parse arguments
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--sheet-dir", help="sheet dir", default="../data/toxicity.xlsx"
+    "--sheet-dir", help="sheet dir", default="../data/toxicity_clean.xlsx"
 )
 parser.add_argument("--task-name", help="task name", required=True)
 parser.add_argument("--model-name", help="graph model name", required=True)
@@ -55,21 +55,10 @@ featurizer = get_featurizer(model_name)
 feature = []
 toxicity = []
 
-cnt = 0
 for cas, smiles, tox in tqdm(df.values[:, [1, 2, -1]]):
     feat = featurizer.featurize(smiles)[0]
-    # search for valid PubChem SMILES
-    if type(feat) == np.ndarray:
-        try:
-            smiles = pcp.get_compounds(
-                smiles.lstrip("0"), "name"
-            )[0].canonical_smiles
-            feat = featurizer.featurize(smiles)
-        except:
-            cnt += 1
-    else:
-        feature.append(feat)
-        toxicity.append(tox)
+    feature.append(feat)
+    toxicity.append(tox)
 
 # split train test
 X_train_val, X_test, y_train_val, y_test = train_test_split(
@@ -99,7 +88,7 @@ for perm in permutations:
 
         model.fit(
             X_train=X_train, y_train=y_train, X_val=X_val, y_val=y_val,
-            epoch=500, patience=50, interval=1, validation=True,
+            epoch=1000, patience=30, interval=1, validation=True,
             metric=mean_squared_error, store_best=True,
             greater_is_better=False, verbose=0
         )
